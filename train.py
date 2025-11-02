@@ -204,12 +204,12 @@ class CustomTrainer(Trainer):
         self.scale = scale
         self.tb_writer = None
         
-    def log(self, logs: Dict[str, float]) -> None:
+    def log(self, logs: Dict[str, float], *args, **kwargs) -> None:
         """Override log to add gradient norms and custom metrics."""
-        super().log(logs)
+        super().log(logs, *args, **kwargs)
         
         # Log to TensorBoard if available
-        if self.tb_writer is not None:
+        if self.tb_writer is not None and hasattr(self.state, 'global_step'):
             for k, v in logs.items():
                 if isinstance(v, (int, float)):
                     self.tb_writer.add_scalar(k, v, self.state.global_step)
