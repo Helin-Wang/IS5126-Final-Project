@@ -370,7 +370,6 @@ def main():
         callbacks.append(
             EarlyStoppingCallback(
                 early_stopping_patience=args.early_stopping_patience,
-                early_stopping_metric=args.early_stopping_metric,
             )
         )
     
