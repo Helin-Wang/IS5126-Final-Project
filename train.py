@@ -214,12 +214,12 @@ class CustomTrainer(Trainer):
                 if isinstance(v, (int, float)):
                     self.tb_writer.add_scalar(k, v, self.state.global_step)
     
-    def training_step(self, model, inputs):
+    def training_step(self, model, inputs, *args, **kwargs):
         """Override to track gradient norms."""
-        loss = super().training_step(model, inputs)
+        loss = super().training_step(model, inputs, *args, **kwargs)
         
-        # Track gradient norms
-        if self.tb_writer is not None and self.state.global_step % self.args.logging_steps == 0:
+        # Track gradient norms (after backward pass)
+        if self.tb_writer is not None and hasattr(self.state, 'global_step') and self.state.global_step % self.args.logging_steps == 0:
             total_norm = 0.0
             for p in model.parameters():
                 if p.grad is not None:
